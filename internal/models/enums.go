@@ -6,7 +6,6 @@ const (
 	Story  IssueType = "story"
 	Task   IssueType = "task"
 	Bug    IssueType = "bug"
-	Epic   IssueType = "epic"
 	Subtask IssueType = "subtask"
 )
 
