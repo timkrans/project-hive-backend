@@ -35,7 +35,6 @@ func (r *IssueRepository) FindByID(id uuid.UUID) (*models.Issue, error) {
 
 func (r *IssueRepository) FindByProject(projectID uuid.UUID) ([]models.Issue, error) {
 	var issues []models.Issue
-
 	err := r.DB.
 		Where("project_id = ?", projectID).
 		Find(&issues).Error
@@ -49,4 +48,17 @@ func (r *IssueRepository) Update(issue *models.Issue) error {
 
 func (r *IssueRepository) Delete(id uuid.UUID) error {
 	return r.DB.Delete(&models.Issue{}, "id = ?", id).Error
+}
+
+func (r *IssueRepository) FindBacklog(projectID uuid.UUID)([]models.Issue,error){
+	var issues []models.Issue
+	err:=r.DB.
+		Where(
+			"project_id = ? AND sprint_id IS NULL",
+			projectID,
+		).
+		Order("position ASC").
+		Find(&issues).
+		Error
+	return issues,err
 }

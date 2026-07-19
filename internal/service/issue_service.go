@@ -21,11 +21,9 @@ func NewIssueService(repo *repository.IssueRepository) *IssueService {
 
 func (s *IssueService) Create(issue *models.Issue) error {
 	issue.ID = uuid.New()
-
 	if issue.Status == "" {
 		issue.Status = models.Todo
 	}
-
 	return s.repo.Create(issue)
 }
 
@@ -50,7 +48,6 @@ func (s *IssueService) UpdateStatus(id uuid.UUID, status models.IssueStatus) err
 	if err != nil {
 		return err
 	}
-
 	switch status {
 	case models.Todo,
 		models.InProgress,
@@ -60,9 +57,7 @@ func (s *IssueService) UpdateStatus(id uuid.UUID, status models.IssueStatus) err
 	default:
 		return errors.New("invalid status")
 	}
-
 	issue.Status = status
-
 	return s.repo.Update(issue)
 }
 
@@ -71,19 +66,28 @@ func (s *IssueService) UpdateStoryPoints(id uuid.UUID, points int) error {
 	if err != nil {
 		return err
 	}
-
 	issue.StoryPoints = points
-
 	return s.repo.Update(issue)
 }
 
-func (s *IssueService) MoveToSprint(issueID uuid.UUID, sprintID uuid.UUID) error {
-	issue, err := s.repo.FindByID(issueID)
-	if err != nil {
+func (s *IssueService) MoveToSprint(
+	issueID uuid.UUID,
+	sprintID *uuid.UUID,) error {
+	issue,err:=s.repo.FindByID(issueID)
+	if err!=nil{
 		return err
 	}
+	issue.SprintID=sprintID
+	return s.repo.Update(issue)
+}
 
-	issue.SprintID = &sprintID
-
+func (s *IssueService)MoveToEpic(
+	issueID uuid.UUID,
+	epicID *uuid.UUID,)error{
+	issue,err:=s.repo.FindByID(issueID)
+	if err!=nil{
+		return err
+	}
+	issue.EpicID=epicID
 	return s.repo.Update(issue)
 }

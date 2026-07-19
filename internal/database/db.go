@@ -21,6 +21,7 @@ func ConnectDatabase() {
 		&models.Project{},
 		&models.Sprint{},
 		&models.Issue{},
+		&models.Epic{},
 	)
 
 	if err != nil {
